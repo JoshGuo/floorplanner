@@ -10,7 +10,8 @@ const styles= {
   svgContainer: {
     width: '100%',
     height: '100%',
-    backgroundColor: 'lightgrey',
+    // height: 'auto',
+    // backgroundColor: 'white',
   },
   scaleInput: {
     position: 'absolute',
@@ -117,7 +118,8 @@ function SVGCanvas() {
       <Overlay />
       <svg style={styles.svgContainer} onMouseMove={updatePointerPos}>
         <g>
-          <image href="floorplan.jpg" height="100%" onClick={handleClick} style={{transform: 'rotate(.35deg)'}}/>
+          <image href="floorplan.jpg" height="100%" style={{transform: 'rotate(.35deg)'}}/>
+          <rect width="100%" height="100%" opacity={0} onClick={handleClick}/>
           <ModeInterface />
         </g>
         {canvasContext.updatePointer && pointer}

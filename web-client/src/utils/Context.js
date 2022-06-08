@@ -7,7 +7,8 @@ const defaultCanvasContext = {
     p1: null,
     p2: null, 
     realDist: null,
-    scale: .473,
+    // scale: .473,
+    scale: .427
   },
   buildState: {
     shapes: [],
