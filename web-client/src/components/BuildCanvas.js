@@ -4,7 +4,7 @@ import EditCanvas from "./EditCanvas";
 import FurnitureShape from "./FurnitureShape";
 
 function BuildCanvas() {
-  const [{buildState, scaleState}, , , updateBuildState, pointerPos] = useContext(CanvasContext);
+  const [{buildState}, updateContext, , updateBuildState, pointerPos] = useContext(CanvasContext);
   const {shapes, currShape} = buildState;
 
   const [activeShape, setActiveShape] = useState(null);
@@ -36,22 +36,32 @@ function BuildCanvas() {
     updateBuildState({
       shapes: newShapes
     });
-  }, [activeShape]);
+  }, [activeShape, shapes, updateBuildState]);
+
+  const deleteShape = useCallback(() => {
+    let newShapes = [...shapes];
+    newShapes.splice(activeShape, 1);
+
+    setActiveShape(null);
+    updateBuildState({
+      shapes: newShapes
+    });
+  }, [activeShape, shapes, updateBuildState])
 
   return(<>
       <g>
         {
           shapes.map((shape, i) => 
-            <g onMouseDown={(e) => initEdit(e, i)}>
+            <g onClick={(e) => initEdit(e, i)}>
               <FurnitureShape x1={shape[0][0]} y1={shape[0][1]} x2={shape[1][0]} y2={shape[1][1]} isActive={i === activeShape}/>
             </g>
           )
         }
-        {currShape && <FurnitureShape x1={currShape[0]} y1={currShape[1]} x2={pointerPos[0]} y2={pointerPos[1]} isBeingDrawn={true}/>}
+        {currShape && <FurnitureShape x1={currShape[0]} y1={currShape[1]} x2={pointerPos[0]} y2={pointerPos[1]} rotation={currShape[2]} isBeingDrawn={true}/>}
       </g>
       {activeShape !== null && 
         <svg width="100%" height="100%">
-          <EditCanvas shape={shapes[activeShape]} originalLocation={originalLocation} finalizeEditCallback={finalizeEdit}/>
+          <EditCanvas shape={shapes[activeShape]} originalLocation={originalLocation} finalizeEditCallback={finalizeEdit} deleteShapeCallback={deleteShape}/>
         </svg>}
     </>
   )

@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from 'react';
+import {useCallback, useState} from 'react';
 import { CanvasContext, defaultCanvasContext } from '../utils/Context.js';
 // import Dot from '../utils/Dot.js';
 import { SVG_CANVAS_MODE } from '../utils/Enums.js';
@@ -60,7 +60,15 @@ function SVGCanvas() {
       updateBuildState({currShape: [pageX, pageY]});
     }else {
       updateBuildState({
-        shapes: [...shapes, [currShape, [pointerPos[0], pointerPos[1]]]],
+        shapes: [
+          ...shapes, 
+          [
+            currShape, // point1
+            [pointerPos[0], pointerPos[1], // point2
+            0 // rotation
+          ]
+        ]
+      ],
         currShape: null 
       });
       updateCanvasContext({updatePointer: false});
@@ -76,12 +84,14 @@ function SVGCanvas() {
       case SVG_CANVAS_MODE.MODE_3:
         buildHandleClick(e);
         break;
+      default: 
     }
   });
 
   const updatePointerPos = ({pageX, pageY}) => {
     // Only update if requested by the canvas marked by state
     if(!canvasContext.updatePointer) return
+    
     let newX = pageX;
     let newY = pageY;
 
@@ -110,6 +120,7 @@ function SVGCanvas() {
     switch(mode) {
       case SVG_CANVAS_MODE.SET_SCALE: return <ScaleCanvas scaleState={scaleState}/>
       case SVG_CANVAS_MODE.MODE_3: return <BuildCanvas />
+      default: 
     }
   }
 
@@ -118,7 +129,7 @@ function SVGCanvas() {
       <Overlay />
       <svg style={styles.svgContainer} onMouseMove={updatePointerPos}>
         <g>
-          <image href="floorplan.jpg" height="100%" style={{transform: 'rotate(.35deg)'}}/>
+          <image href="jweianthony.jpg" x={"400"}/>
           <rect width="100%" height="100%" opacity={0} onClick={handleClick}/>
           <ModeInterface />
         </g>

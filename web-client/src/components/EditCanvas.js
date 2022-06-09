@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 function generatePointsString(a, b, displacement) {
   return `
@@ -9,10 +9,14 @@ function generatePointsString(a, b, displacement) {
   `;
 }
 
-function EditCanvas({shape, originalLocation, finalizeEditCallback}) {
+function EditCanvas({shape, originalLocation, finalizeEditCallback, deleteShapeCallback}) {
   const [displacement, setDisplacement] = useState([0,0]);
+  const [isMoving, setIsMoving] = useState(false);
+  const [isRotating, setIsRotating] = useState(false);
 
   const updateDisplacement = ({pageX, pageY}) => {
+    if(!isMoving) return;
+
     let deltaX = pageX - originalLocation[0];
     let deltaY =  pageY - originalLocation[1];
 
@@ -24,30 +28,52 @@ function EditCanvas({shape, originalLocation, finalizeEditCallback}) {
     setDisplacement([deltaX, deltaY]);
   }
 
+  useEffect(() => {
+    const callback = ({code}) => {
+      if(code === "Delete" || code === "Backspace") {
+        console.log("delete shape");
+        deleteShapeCallback()
+      }
+    };
+    document.addEventListener("keydown", callback);
+    return(() => {
+      document.removeEventListener("keydown", callback)
+    });
+  }, [])
+
   return <g>
      <rect 
       width="100%" 
       height="100%"
-      opacity={.4}
+      opacity={.3}
       fill="white"
+      onClick={() => finalizeEditCallback(displacement)}
     />
     <polygon
       strokeLinejoin="round"
       points={generatePointsString([shape[0][0], shape[0][1]], [shape[1][0], shape[1][1]], displacement)}
       stroke="black"
       fill="lightblue"
-      opacity={.7}
+      opacity={1}
       strokeWidth="2"
-    />
-    <rect 
-      width="100%" 
-      height="100%"
-      opacity={0}
-      fill="white"
+      transformBox="fill-box"
+      // transform={`rotate(${0} ${(shape[0][0]+shape[1][0])/2 + displacement[0]} ${(shape[0][1]+shape[1][1])/2 + displacement[1]})`}
+      transformOrigin="center"
       cursor="move"
-      onMouseMove={updateDisplacement}
-      onMouseUp={() => finalizeEditCallback(displacement)}
+      onMouseDown={() => setIsMoving(true)}
+      strokeDasharray={5}
     />
+    {isMoving &&
+      <rect 
+        width="100%" 
+        height="100%"
+        opacity={0}
+        fill="white"
+        cursor="move"
+        onMouseMove={updateDisplacement}
+        onMouseUp={() => setIsMoving(false)}
+      />
+    }
   </g>;
 }
 
