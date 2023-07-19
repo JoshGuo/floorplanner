@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/floorplanner/static/css/main.e6c13ad2.css",
-    "main.js": "/floorplanner/static/js/main.70be3b1d.js",
+    "main.js": "/floorplanner/static/js/main.a4ae45a5.js",
     "index.html": "/floorplanner/index.html",
     "main.e6c13ad2.css.map": "/floorplanner/static/css/main.e6c13ad2.css.map",
-    "main.70be3b1d.js.map": "/floorplanner/static/js/main.70be3b1d.js.map"
+    "main.a4ae45a5.js.map": "/floorplanner/static/js/main.a4ae45a5.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.70be3b1d.js"
+    "static/js/main.a4ae45a5.js"
   ]
 }
